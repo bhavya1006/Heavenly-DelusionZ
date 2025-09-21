@@ -103,7 +103,7 @@ After running the above command, visit:
 
   - **Localhost**: [http://localhost:8501](https://www.google.com/search?q=http://localhost:8501)
   - **Network URL** (for external access): Check your terminal output
-  - **Deployed App**: [https://heavenly-delusionist.streamlit.app/](https://heavenly-delusionist.streamlit.app/) - Access the live version directly online
+  - **Deployed App**: [https://heavenly-delusionist.streamlit.app/](https://heavenly-delusionz.streamlit.app/) - Access the live version directly online
 
 -----
 

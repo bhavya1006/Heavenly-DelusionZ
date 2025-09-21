@@ -1,19 +1,16 @@
 import os
+import google.generativeai as genai
 from dotenv import load_dotenv
-from openai import OpenAI
 
 # Load API key
 load_dotenv()
-NEBIUS_API_KEY = os.getenv("NEBIUS_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-if not NEBIUS_API_KEY:
-    raise ValueError("Missing NEBIUS_API_KEY. Set it in the .env file.")
+if not GEMINI_API_KEY:
+    raise ValueError("Missing GEMINI_API_KEY. Set it in the .env file.")
 
-# Initialize OpenAI client
-client = OpenAI(
-    api_key=NEBIUS_API_KEY,
-    base_url="https://api.studio.nebius.com/v1/"
-)
+# Configure Gemini client
+genai.configure(api_key=GEMINI_API_KEY)
 
 # Store conversation histories for users
 user_memory = {}
@@ -147,34 +144,24 @@ def get_response(username, user_input, selected_persona="Heavenly DelusionZ Coun
     # Construct conversation history text
     history_text = ""
     for message in memory:
-        if message["role"] == "user":
-            history_text += f"User: {message['content']}\n"
-        else:
-            history_text += f"{selected_persona}: {message['content']}\n"
+        role = "user" if message["role"] == "user" else "model"
+        history_text += f"{role}: {message['content']}\n"
     
     # Prepare system message with persona prompt
-    system_prompt = persona_prompts[selected_persona].replace("{history}", history_text).split("User: {input}")[0]
+    prompt = persona_prompts[selected_persona].format(history=history_text, input=user_input)
     
-    # Create messages for the API call
-    messages = [
-        {"role": "system", "content": system_prompt},
-        *memory,
-        {"role": "user", "content": user_input}
-    ]
+    # Initialize the generative model
+    model = genai.GenerativeModel('gemini-1.5-flash')
     
-    # Call the OpenAI API
-    response = client.chat.completions.create(
-        model="Qwen/Qwen2.5-32B-Instruct",
-        messages=messages,
-        max_tokens=3100,
-        temperature=0.7
-    )
+    # Start a chat session and send the message
+    chat = model.start_chat(history=memory)
+    response = chat.send_message(prompt)
     
     # Extract the response text
-    response_text = response.choices[0].message.content
+    response_text = response.text
     
     # Update the memory with this exchange
     memory.append({"role": "user", "content": user_input})
-    memory.append({"role": "assistant", "content": response_text})
+    memory.append({"role": "model", "content": response_text})
     
     return response_text

@@ -153,8 +153,16 @@ def get_response(username, user_input, selected_persona="Heavenly DelusionZ Coun
     # Initialize the generative model
     model = genai.GenerativeModel('gemini-1.5-flash')
     
+    # Convert history to the format expected by the Gemini API
+    gemini_history = []
+    for message in memory:
+        role = message["role"]
+        if role == "assistant":
+            role = "model"
+        gemini_history.append({"role": role, "parts": [{"text": message["content"]}]})
+
     # Start a chat session and send the message
-    chat = model.start_chat(history=memory)
+    chat = model.start_chat(history=gemini_history)
     response = chat.send_message(prompt)
     
     # Extract the response text

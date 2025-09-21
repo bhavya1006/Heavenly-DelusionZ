@@ -148,3 +148,40 @@ if "authenticated" in st.session_state and st.session_state["authenticated"]:
     if st.sidebar.button("🚪 Log Out", key="logout_button"):
         st.session_state.clear()  
         st.rerun()
+
+# Custom CSS for mobile responsiveness
+st.markdown("""
+    <style>
+        /* General responsive improvements */
+        .main .block-container {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        /* Make sidebar logo responsive */
+        [data-testid="stSidebar"] img {
+            max-width: 80%;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Media query for mobile devices */
+        @media (max-width: 768px) {
+            .main .block-container {
+                padding-top: 1rem;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+
+            h1 {
+                font-size: 1.8rem !important;
+            }
+
+            [data-testid="stSidebar"] .st-emotion-cache-16txtl3 {
+                padding-top: 1.5rem;
+            }
+        }
+    </style>
+""", unsafe_allow_html=True)

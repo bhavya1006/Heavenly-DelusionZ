@@ -151,7 +151,7 @@ def get_response(username, user_input, selected_persona="Heavenly DelusionZ Coun
     prompt = persona_prompts[selected_persona].format(history=history_text, input=user_input)
     
     # Initialize the generative model
-    model = genai.GenerativeModel('gemini-1.5-flash')
+    model = genai.GenerativeModel('gemini-2.5-flash')
     
     # Convert history to the format expected by the Gemini API
     gemini_history = []

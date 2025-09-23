@@ -17,6 +17,9 @@ from database import get_sessions
 def show_analytics_page():
     """Main analytics dashboard page"""
     
+    # Apply mobile CSS
+    add_mobile_css()
+    
     st.title("🧠 Mental Health Analytics Dashboard")
     st.markdown("### Comprehensive Youth Mental Wellness Insights")
     
@@ -569,6 +572,3 @@ def add_mobile_css():
         }
     </style>
     """, unsafe_allow_html=True)
-
-# Apply mobile CSS
-add_mobile_css()

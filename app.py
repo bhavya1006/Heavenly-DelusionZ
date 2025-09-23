@@ -2,6 +2,7 @@ import streamlit as st
 from database import init_db, create_new_session, get_sessions, rename_session, delete_session, save_chat, load_chat_history
 from auth import show_auth_page
 from chatbot import get_response
+from analytics_page import show_analytics_page
 
 # Initialize database
 init_db()
@@ -22,6 +23,22 @@ show_auth_page()
 # **Handle Chat Sessions**
 if "authenticated" in st.session_state and st.session_state["authenticated"]:
     username = st.session_state["username"]  
+
+    # **Page Navigation**
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("## 📱 Navigation")
+    page = st.sidebar.radio(
+        "Select Page:",
+        ["💬 Chat", "📊 Analytics"],
+        key="page_navigation"
+    )
+    
+    # Show appropriate page based on selection
+    if page == "📊 Analytics":
+        show_analytics_page()
+        return  # Exit early to prevent showing chat interface
+    
+    # Continue with chat interface if "💬 Chat" is selected
 
     # **Sidebar Section**
     st.sidebar.title(f"💬 {username}'s Chat Sessions")  

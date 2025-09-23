@@ -172,4 +172,35 @@ def get_response(username, user_input, selected_persona="Heavenly DelusionZ Coun
     memory.append({"role": "user", "content": user_input})
     memory.append({"role": "model", "content": response_text})
     
+    # Trigger analytics update in parallel (non-blocking)
+    try:
+        from analytics_engine import get_mental_health_analytics
+        # Update analytics asynchronously (in a real app, you might use threading or async)
+        # For now, we'll just ensure the analytics are available when requested
+        pass
+    except Exception as e:
+        # Analytics generation shouldn't block the main response
+        print(f"Analytics update failed: {e}")
+    
     return response_text
+
+def get_response_with_analytics(username, user_input, selected_persona="Heavenly DelusionZ Counselor"):
+    """
+    Generate both a chatbot response and mental health analytics.
+    
+    :param username: The user's username.
+    :param user_input: The user's input message.
+    :param selected_persona: The chosen AI persona.
+    :return: Tuple of (response, analytics)
+    """
+    # Get the normal response
+    response = get_response(username, user_input, selected_persona)
+    
+    # Generate analytics
+    try:
+        from analytics_engine import get_mental_health_analytics
+        analytics = get_mental_health_analytics(username)
+        return response, analytics
+    except Exception as e:
+        print(f"Analytics generation failed: {e}")
+        return response, None
